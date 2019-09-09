@@ -8,7 +8,7 @@ statemachine_entry_t *get_entry(statemachine_t *statemachine,
 				unsigned int state, unsigned int event)
 {
 	return (statemachine_entry_t *)(statemachine->states +
-					(state * event + event));
+					(state * statemachine->max_events + event));
 }
 
 /*
@@ -17,7 +17,7 @@ statemachine_entry_t *get_entry(statemachine_t *statemachine,
 statemachine_t *create_statemachine(unsigned int num_states,
 				    unsigned int num_events,
 				    unsigned int initial_state,
-					event_handler error_handler)
+				    event_handler error_handler)
 {
 	// allocate a new state machine
 	statemachine_t *statemachine =
