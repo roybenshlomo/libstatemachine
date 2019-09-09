@@ -75,9 +75,7 @@ void add_event_handler(statemachine_t *statemachine, unsigned int state,
 	statemachine_entry_t *entry = get_entry(statemachine, state, event);
 
 	if (entry) {
-		if (entry->handler) {
-			entry->handler = handler;
-		}
+		entry->handler = handler;
 		entry->next_state = next_state;
 	}
 }
@@ -96,7 +94,9 @@ void handle_event(statemachine_t *statemachine, unsigned int event, void *args)
 		get_entry(statemachine, statemachine->current_state, event);
 
 	if (entry) {
-		entry->handler(args);
+        if (entry->handler) {
+            entry->handler(args);
+        }
 		statemachine->current_state = entry->next_state;
 	}
 }
