@@ -16,7 +16,8 @@ statemachine_entry_t *get_entry(statemachine_t *statemachine,
  */
 statemachine_t *create_statemachine(unsigned int num_states,
 				    unsigned int num_events,
-				    unsigned int initial_state)
+				    unsigned int initial_state,
+					event_handler error_handler)
 {
 	// allocate a new state machine
 	statemachine_t *statemachine =
@@ -40,8 +41,8 @@ statemachine_t *create_statemachine(unsigned int num_states,
 			     event++) {
 				statemachine_entry_t *current_entry =
 					get_entry(statemachine, state, event);
-				current_entry->handler = 0;
-				current_entry->next_state = 0;
+				current_entry->handler = error_handler;
+				current_entry->next_state = state;
 			}
 		}
 	}
@@ -74,7 +75,9 @@ void add_event_handler(statemachine_t *statemachine, unsigned int state,
 	statemachine_entry_t *entry = get_entry(statemachine, state, event);
 
 	if (entry) {
-		entry->handler = handler;
+		if (entry->handler) {
+			entry->handler = handler;
+		}
 		entry->next_state = next_state;
 	}
 }

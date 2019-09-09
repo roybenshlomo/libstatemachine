@@ -29,7 +29,8 @@ typedef struct statemachine_t {
  */
 statemachine_t *create_statemachine(unsigned int num_states,
 				    unsigned int num_events,
-				    unsigned int initial_state);
+				    unsigned int initial_state,
+					event_handler error_handler);
 
 /*
  * add an event handler to the state machine
