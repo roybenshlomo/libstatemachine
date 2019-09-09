@@ -8,7 +8,8 @@ statemachine_entry_t *get_entry(statemachine_t *statemachine,
 				unsigned int state, unsigned int event)
 {
 	return (statemachine_entry_t *)(statemachine->states +
-					(state * statemachine->max_events + event));
+					(state * statemachine->max_events +
+					 event));
 }
 
 /*
@@ -94,9 +95,9 @@ void handle_event(statemachine_t *statemachine, unsigned int event, void *args)
 		get_entry(statemachine, statemachine->current_state, event);
 
 	if (entry) {
-        if (entry->handler) {
-            entry->handler(args);
-        }
+		if (entry->handler) {
+			entry->handler(args);
+		}
 		statemachine->current_state = entry->next_state;
 	}
 }
