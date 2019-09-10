@@ -2,14 +2,17 @@
 #include <map>
 #include <functional>
 #include <any>
+#ifdef THREAD_SAFE
+#include <mutex>
+#endif // THREAD_SAFE
 
 template<class State, class Event>
 class statemachine
 {
-    using handler_function = std::function<void(std::any &)>;
-    using state_key = std::pair<State,Event>;
-    using state_value = std::pair<handler_function, State>;
-    using states_map = std::map<state_key, state_value>;
+    using handler_function_t = std::function<void(std::any &)>;
+    using state_key_t = std::pair<State,Event>;
+    using state_value_t = std::pair<handler_function_t, State>;
+    using states_map_t = std::map<state_key_t, state_value_t>;
     public:
         /*
          * constructor
@@ -19,7 +22,7 @@ class statemachine
         /*
          * add a handler to the state machine
          */
-        void add_handler(State state, Event event, handler_function handler, State next_state);
+        void add_handler(State state, Event event, handler_function_t handler, State next_state);
 
         /*
          * handle an incoming event
@@ -30,8 +33,12 @@ class statemachine
          * map holding transitions between pairs of state,event
          * to their appropriate function handler and next state
          */
-        states_map m_map;
+        states_map_t m_map;
         State m_current_state;
+        
+        #ifdef THREAD_SAFE
+        std::mutex m_lock;
+        #endif // THREAD_SAFE
 };
 
 template<class State, class Event>
@@ -41,14 +48,20 @@ statemachine<State,Event>::statemachine(State init_state)
 }
 
 template<class State, class Event>
-void statemachine<State,Event>::add_handler(State state, Event event, handler_function handler, State next_state)
+void statemachine<State,Event>::add_handler(State state, Event event, handler_function_t handler, State next_state)
 {
+    #ifdef THREAD_SAFE
+    std::scoped_lock lock(m_lock);
+    #endif // THREAD_SAFE
     m_map[{state,event}] = {handler, next_state};
 }
 
 template<class State, class Event>
 void statemachine<State,Event>::handle_event(Event event, std::any & args)
 {
+    #ifdef THREAD_SAFE
+    std::scoped_lock lock(m_lock);
+    #endif // THREAD_SAFE
     auto handler = m_map.find({m_current_state, event});
 
     // handler not found in map, throw an exception
