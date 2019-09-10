@@ -18,38 +18,37 @@ enum class events_t
 
 void generic_error(std::any & args)
 {
-	std::cout << "received a generic error (invalid state,event pair)" << std::endl;
+    std::cout << "received a generic error (invalid state,event pair)" << std::endl;
 }
 
 void start_ringing(std::any & args)
 {
-	std::cout << "gling gling gling" << std::endl;
+    std::cout << "gling gling gling" << std::endl;
 }
 
 void initiate_call(std::any & args)
 {
-	std::cout << "hello how can i help you?" << std::endl;
+    std::cout << "hello how can i help you?" << std::endl;
 }
 
 void call_tone(std::any & args)
 {
-	std::cout << "beeeeeeeep" << std::endl;
+    std::cout << "beeeeeeeep" << std::endl;
 }
 
 void no_action(std::any & args)
 {
-	std::cout << "nothing to do here really, a no-op" << std::endl;
+    std::cout << "nothing to do here really, a no-op" << std::endl;
 }
 
 void terminate_call(std::any & args)
 {
-	std::cout << "goodbye!" << std::endl;
+    std::cout << "goodbye!" << std::endl;
 }
 
-
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
-    statemachine<states_t,events_t> fsm(states_t::idle);
+    statemachine<states_t, events_t> fsm(states_t::idle);
 
     fsm.add_handler(states_t::idle, events_t::hook_pickup, call_tone, states_t::active_call);
     fsm.add_handler(states_t::idle, events_t::incoming_call, start_ringing, states_t::ringing);
