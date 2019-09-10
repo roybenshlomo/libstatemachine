@@ -11,29 +11,6 @@ class statemachine
     using state_value = std::pair<handler_function, State>;
     using states_map = std::map<state_key, state_value>;
     public:
-        class invalid_transition_exception : public std::runtime_error
-        {
-            public:
-                invalid_transition_exception(State state, Event event) : runtime_error("Invalid state machine transition")
-                {
-                    this->state = state;
-                    this->event = event;
-                }
-
-                Event get_event() const
-                {
-                    return this->event;
-                }
-
-                State get_state() const
-                {
-                    return this->state;
-                }
-            private:
-                State state;
-                Event event;
-        };
-    public:
         /*
          * constructor
          */
@@ -76,7 +53,7 @@ void statemachine<State,Event>::handle_event(Event event, std::any & args)
 
     // handler not found in map, throw an exception
     if (handler == m_map.end()) {
-        throw invalid_transition_exception(m_current_state,event);
+        throw std::runtime_error("Invalid transition of events");
     }
 
     handler->second.first(args);
