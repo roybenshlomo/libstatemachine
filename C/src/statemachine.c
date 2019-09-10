@@ -39,7 +39,7 @@ statemachine_t *create_statemachine(unsigned int num_states, unsigned int num_ev
 			}
 		}
 #ifdef THREAD_SAFE
-		if (pthread_mutex_init(&statemachine->lock) != 0) {
+		if (pthread_mutex_init(&statemachine->lock,0) != 0) {
 			destory_statemachine(statemachine);
 		}
 #endif // THREAD_SAFE
