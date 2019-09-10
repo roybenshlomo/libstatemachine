@@ -1,5 +1,6 @@
-#include "statemachine.h"
 #include <stdlib.h>
+
+#include "statemachine.h"
 
 /*
  * get entry at the appropriate field in the [state, event] matrix
@@ -13,7 +14,7 @@ statemachine_entry_t *get_entry(statemachine_t *statemachine, unsigned int state
  * create a state machine instance
  */
 statemachine_t *create_statemachine(unsigned int num_states, unsigned int num_events, unsigned int initial_state,
-				    event_handler error_handler)
+				    event_handler_t error_handler)
 {
 	// allocate a new state machine
 	statemachine_t *statemachine = (statemachine_t *)malloc(sizeof(statemachine_t));
@@ -73,7 +74,7 @@ void destory_statemachine(statemachine_t *statemachine)
 /*
  * add an event handler to the state machine
  */
-void add_event_handler(statemachine_t *statemachine, unsigned int state, unsigned int event, event_handler handler,
+void add_event_handler(statemachine_t *statemachine, unsigned int state, unsigned int event, event_handler_t handler,
 		       unsigned int next_state)
 {
 	// check that the state and event are not out of range

@@ -8,14 +8,14 @@
 /*
  * event handler function type
  */
-typedef void (*event_handler)(void *);
+typedef void (*event_handler_t)(void *);
 
 /*
  * definition of a single state machine entry
  */
-typedef struct statemachine_entry_t {
+typedef struct statemachine_entry {
 	unsigned int next_state;
-	event_handler handler;
+	event_handler_t handler;
 } statemachine_entry_t;
 
 /*
@@ -35,12 +35,12 @@ typedef struct statemachine_t {
  * create a state machine instance
  */
 statemachine_t *create_statemachine(unsigned int num_states, unsigned int num_events, unsigned int initial_state,
-				    event_handler error_handler);
+				    event_handler_t error_handler);
 
 /*
  * add an event handler to the state machine
  */
-void add_event_handler(statemachine_t *statemachine, unsigned int state, unsigned int event, event_handler handler,
+void add_event_handler(statemachine_t *statemachine, unsigned int state, unsigned int event, event_handler_t handler,
 		       unsigned int next_state);
 
 /*
