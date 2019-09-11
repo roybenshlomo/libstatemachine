@@ -1,4 +1,5 @@
 #include <iostream>
+#include <list>
 
 #include "statemachine.h"
 
@@ -14,6 +15,18 @@ enum class events_t
     hook_pickup,
     hook_down,
     incoming_call
+};
+
+class phone_context
+{
+    public:
+        phone_context(){}
+        void add_call(std::string & number)
+        {
+            m_last_called.emplace_front(number);
+        }
+    private:
+        std::list<std::string> m_last_called;
 };
 
 void generic_error(std::any & args)
@@ -46,6 +59,7 @@ void terminate_call(std::any & args)
     std::cout << "goodbye!" << std::endl;
 }
 
+
 int main(int argc, char * argv[])
 {
     statemachine<states_t, events_t> fsm(states_t::idle);
@@ -56,11 +70,12 @@ int main(int argc, char * argv[])
     fsm.add_handler(states_t::ringing, events_t::incoming_call, no_action, states_t::ringing);
     fsm.add_handler(states_t::active_call, events_t::hook_down, terminate_call, states_t::idle);
 
-    auto param = std::make_any<int>(0);
+    phone_context context;
+    auto context_param = std::make_any<phone_context>(context);
 
-    fsm.handle_event(events_t::incoming_call, param);
-    fsm.handle_event(events_t::hook_pickup, param);
-    fsm.handle_event(events_t::hook_down, param);
+    fsm.handle_event(events_t::incoming_call, context_param);
+    fsm.handle_event(events_t::hook_pickup, context_param);
+    fsm.handle_event(events_t::hook_down, context_param);
 
     return 0;
 }
