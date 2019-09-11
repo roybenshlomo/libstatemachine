@@ -17,6 +17,7 @@ class statemachine
 public:
     /*
      * constructor
+     * state - initial state of the state machine
      */
     statemachine(State init_state);
 
@@ -27,6 +28,8 @@ public:
 
     /*
      * handle an incoming event
+     * args parameter acts as a free variable that allows passing context
+     * between various handlers in the state machine
      */
     void handle_event(Event event, std::any & args);
 

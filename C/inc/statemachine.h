@@ -33,6 +33,7 @@ typedef struct statemachine_t {
 
 /*
  * create a state machine instance
+ * error_handler - function pointer to call in case of an invalid state,event pair
  */
 statemachine_t *create_statemachine(unsigned int num_states, unsigned int num_events, unsigned int initial_state,
 				    event_handler_t error_handler);
@@ -45,6 +46,8 @@ void add_event_handler(statemachine_t *statemachine, unsigned int state, unsigne
 
 /*
  * handle an event (will run the actual handler of the event)
+ * args parameter is a free pointer that can be used to pass context between
+ * different handlers of the state machine
  */
 void handle_event(statemachine_t *statemachine, unsigned int event, void *args);
 
